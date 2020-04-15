@@ -1,1 +1,28 @@
-# Defaults variables for role opennebula-frontend
+# Default variables for opennebula-frontend role
+
+opennebula_version: '5.10'
+opennebula_pkgs_list:
+  - opennebula-server
+  - opennebula-sunstone
+  - opennebula-ruby
+  - opennebula-gate
+  - opennebula-flow
+  - python-pyone
+
+# Password for first admin user
+opennebula_oneadmin_pass: KiSS_so_N0t_0p3n5t@ck
+
+# Which pre-generated ssh keys we want to deploy from central pkistore
+opennebula_ssh_private_key: ssh-opennebula-dev.key
+opennebula_ssh_pub_key: ssh-opennebula-dev.pub
+
+# Mysql settings
+opennebula_db_user: opennebula
+opennebula_db_pass: KiSS_so_N0t_0p3n5t@ck
+opennebula_db_name: opennebula
+
+# Scheduler settings
+opennebula_sched_interval: 5        # Seconds between two scheduling actions
+opennebula_sched_max_vm: 5000       # Maximum number of VMs scheduled in each cycle
+opennebula_sched_max_dispatch: 30   # Maximum number of VMs dispatched in each cyle
+opennebula_sched_max_host: 5        # Maximum number of VMs per host in each cycle

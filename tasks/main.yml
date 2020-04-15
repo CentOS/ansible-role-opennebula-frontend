@@ -1,1 +1,91 @@
-# Defaults tasks for role opennebula-frontend
+# Default task for role opennebula-frontend
+- name: Required MySQL setup
+  include_role:
+    name: mysql
+
+- name: Creating mandatory (local) DB 
+  include_role: 
+    name: mysql
+    tasks_from: db
+  vars:
+    mysql_db_user: "{{ opennebula_db_user }}"
+    mysql_db_pass: "{{ opennebula_db_pass }}"
+    mysql_db_name: "{{ opennebula_db_name }}"
+  tags:
+    - db
+
+- name: Distributing repo to install Opennebula
+  template:
+    src: opennebula.repo.j2
+    dest: /etc/yum.repos.d/opennebula.repo
+
+- name: Install required pkgs for Opennebula
+  yum:
+    name: "{{ opennebula_pkgs_list }}"
+    state: installed
+
+- name: Configuring initial password to init
+  template:
+    src: one_auth.j2
+    dest: /var/lib/one/.one/one_auth
+    owner: oneadmin
+    group: oneadmin
+
+- name: Importing ssh private key for oneadmin
+  copy:
+    src: "{{ pkistore }}/ssh/{{ opennebula_ssh_private_key }}"
+    dest: /var/lib/one/.ssh/id_rsa
+    owner: oneadmin
+    group: oneadmin
+    mode: 0600
+  tags:
+    - ssh
+
+- name: Importing ssh public key for oneadmin
+  copy:
+    src: "{{ pkistore }}/ssh/{{ opennebula_ssh_pub_key }}"
+    dest: /var/lib/one/.ssh/authorized_keys
+    owner: oneadmin
+    group: oneadmin
+    mode: 0600
+  tags:
+    - ssh
+
+- name: Ensuring opennebula frontend can reach all nodes with forwarding
+  template:
+    src: ssh_config.j2
+    dest: /var/lib/one/.ssh/config
+    owner: oneadmin
+    group: oneadmin
+    mode: 0600
+  tags:
+    - ssh
+
+- name: Configuring basic opennebula oned.conf
+  template:
+    src: oned.conf.j2
+    dest: /etc/one/oned.conf
+    owner: root
+    group: oneadmin
+    mode: 0640
+  notify:
+    - restart_opennebula
+
+- name: Configuring opennebula scheduler
+  template:
+    src: sched.conf.j2
+    dest: /etc/one/sched.conf
+    owner: root
+    group: oneadmin
+    mode: 0640
+  notify:
+    - restart_opennebula_scheduler
+
+- name: Ensuring services are started
+  service:
+    name: "{{ item }}"
+    state: started
+    enabled: True
+  with_items:
+    - opennebula
+    - opennebula-sunstone

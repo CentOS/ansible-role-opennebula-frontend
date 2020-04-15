@@ -1,1 +1,9 @@
-# Defaults handlers for role opennebula-frontend
+- name: restart_opennebula
+  service:
+    name: opennebula
+    state: restarted
+
+- name: restart_opennebula_scheduler
+  service:
+    name: opennebula-scheduler
+    state: restarted
