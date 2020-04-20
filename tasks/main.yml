@@ -44,10 +44,13 @@
 - name: Importing ssh public key for oneadmin
   copy:
     src: "{{ pkistore }}/ssh/{{ opennebula_ssh_pub_key }}"
-    dest: /var/lib/one/.ssh/authorized_keys
+    dest: "/var/lib/one/.ssh/{{ item }}"
     owner: oneadmin
     group: oneadmin
     mode: 0600
+  with_items:
+    - authorized_keys
+    - id_rsa.pub
   tags:
     - ssh
 
@@ -89,3 +92,14 @@
   with_items:
     - opennebula
     - opennebula-sunstone
+
+# FIXME: (ab)using pip while waiting for proper rpm to exist
+- block:
+  - name: Ensuring we have pip installed
+    yum:
+      name: python2-pip
+      state: installed
+
+  - name: Installing required pip pkgs and deps for delegated tasks
+    pip:
+      name: ['oca', 'pyone']
