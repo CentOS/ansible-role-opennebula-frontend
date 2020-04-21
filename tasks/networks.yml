@@ -1,0 +1,20 @@
+- name: Dropping rendered templates in place
+  template:
+    src: network-bridge.j2
+    dest: "/var/lib/one/templates/networks/{{ item.name }}.tpl"
+  with_items: "{{ opennebula_networks }}"
+  register: networks_list
+  loop_control:
+    label: '{{ item.name }}'
+  tags:
+    - networks
+
+- name: Registering network if needed
+  shell: "onevnet create /var/lib/one/templates/network/{{ item.item.name }}.tpl"
+  become_user: oneadmin
+  when: item.changed
+  loop: "{{ networks_list.results }}"
+  loop_control:
+    label: '{{ item.item.name }}'
+  tags:
+    - networks

@@ -37,3 +37,14 @@ opennebula_sched_max_host: 5        # Maximum number of VMs per host in each cyc
 opennebula_images:
   - image_name: CentOS_8_x86_64_8.1.1911
     url: https://cloud.centos.org/centos/8/x86_64/images/CentOS-8-GenericCloud-8.1.1911-20200113.3.x86_64.qcow2
+
+# Which networks to create, supporting only bridge mode for now
+opennebula_networks:
+  - name: bridge_0
+    bridge_name: br0 # normally exists on hypervisors
+    description: my beatiful bridge0
+    first_ip: 192.168.123.10
+    range: 15 # number of ip to automatically add based on first_ip
+    dns: 192.168.123.1
+    gateway: 192.168.123.1
+    netmask: 255.255.255.0

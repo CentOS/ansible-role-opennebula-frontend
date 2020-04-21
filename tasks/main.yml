@@ -104,7 +104,22 @@
     pip:
       name: ['oca', 'pyone']
 
+- name: Ensuring we have directories to drop templates
+  file:
+    path: "/var/lib/one/templates/{{ item }}"
+    state: directory
+    owner: oneadmin
+  with_items:
+    - networks
+    - images
+    - instances
+
 - name: Managing images
   include_tasks: images.yml
   tags:
     - images
+
+- name: Managing Networks
+  include_tasks: networks.yml
+  tags:
+    - networks

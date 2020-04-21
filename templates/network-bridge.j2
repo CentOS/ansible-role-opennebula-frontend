@@ -1,0 +1,16 @@
+NAME="{{ item.name }}"
+BRIDGE_TYPE="linux"
+BRIDGE = "{{ item.bridge_name }}"
+DESCRIPTION = "{{ item.description }}"
+AR = [
+  IP = "{{ item.first_ip }}",
+  SIZE = "{{ item.range }}",
+  TYPE = "IP4",
+  AR_ID = "" ]
+VN_MAD = "bridge"
+AR_POOL = [
+  AR = "[object Object]" ]
+DNS="{{ item.dns }}"
+GATEWAY="{{ item.gateway }}"
+NETWORK_MASK="{{ item.netmask }}"
+
