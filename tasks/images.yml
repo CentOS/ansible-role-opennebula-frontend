@@ -1,0 +1,24 @@
+- name: Registering currently available images 
+  one_image_info:
+    api_username: "{{ opennebula_api_username }}"
+    api_password: "{{ opennebula_api_password }}"
+    api_url: "{{ opennebula_api_url }}"
+  register: result
+  tags:
+    - images
+
+- name: Parsing list 
+  set_fact: 
+    images_list: "{{ result.images | map(attribute='name') | list }}"
+  tags:
+    - images
+
+- name: Importing image if needed 
+  shell: oneimage create -d 1 --name "{{ item.image_name }}" --description "{{ item.image_name }}" --prefix vd --type os --driver qcow2 --path "{{ item.url }}" ; oneimage chmod "{{ item.image_name }}" 644
+  become_user: oneadmin
+  with_items: "{{ opennebula_images }}"
+  when: item.image_name not in images_list
+  loop_control:
+    label: '{{ item.image_name }}'
+  tags:
+    - images

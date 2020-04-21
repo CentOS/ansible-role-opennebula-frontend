@@ -103,3 +103,8 @@
   - name: Installing required pip pkgs and deps for delegated tasks
     pip:
       name: ['oca', 'pyone']
+
+- name: Managing images
+  include_tasks: images.yml
+  tags:
+    - images
