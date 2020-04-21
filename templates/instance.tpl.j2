@@ -1,0 +1,45 @@
+NAME="{{ item.name }}"
+CONTEXT=[
+  DEV_PREFIX="sd",
+  NETWORK="YES",
+  SD_DISK_BUS="scsi",
+  SSH_PUBLIC_KEY="$USER[SSH_PUBLIC_KEY]",
+  USER_DATA="#cloud-config
+disable_root: False
+preserve_hostname: False
+runcmd:
+  - hostnamectl set-hostname `ip -4 -r address |grep glob|cut -f 6 -d \" \"|cut -f 1 -d \"/\"`
+  - sed s/enabled=0/enabled=1/ -i /etc/yum.repos.d/CentOS-CR.repo
+" ]
+CPU="{{ item.cpu }}"
+VCPU="{{ item.vcpu }}"
+MEMORY="{{ item.memory }}"
+MEMORY_UNIT_COST="MB"
+CPU_MODEL=[
+  MODEL="host-passthrough" ]
+DISK=[
+  IMAGE="{{ item.image }}",
+  IMAGE_UNAME="oneadmin",
+  SIZE="{{ item.size }}" ]
+GRAPHICS=[
+  LISTEN="0.0.0.0",
+  TYPE="VNC" ]
+HYPERVISOR="kvm"
+INFO="This is image {{ item.name }} with {{ item.vcpu }} cores, {{ item.memory }} MB of ram and one {{ item.size }}MB HDD"
+INPUTS_ORDER=""
+LABELS="{{ item.arch }}"
+LOGO="images/logos/centos.png"
+LXD_SECURITY_PRIVILEGED="true"
+NIC=[
+  NETWORK="{{ item.network }}",
+  NETWORK_UNAME="oneadmin" ]
+NIC_DEFAULT=[
+  MODEL="virtio" ]
+OS=[
+  ARCH="{{ item.arch }}",
+  BOOT="" ]
+RAW=[
+  DATA="<devices><serial type=\"pty\"><source path=\"/dev/pts/5\"/><target port=\"0\"/></serial><console type=\"pty\" tty=\"/dev/pts/5\"><source path=\"/dev/pts/5\"/><target port=\"0\"/></console></devices>",
+  TYPE="kvm" ]
+SCHED_REQUIREMENTS="ARCH=\"{{ item.arch }}\""
+

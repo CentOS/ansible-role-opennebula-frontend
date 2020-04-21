@@ -48,3 +48,15 @@ opennebula_networks:
     dns: 192.168.123.1
     gateway: 192.168.123.1
     netmask: 255.255.255.0
+
+# Which templates/flavors to create to be able to instantiate those easily
+# Memory/disk size are all in MB
+opennebula_instances:
+  - name: CentOS 8 x86_64 tiny
+    image: CentOS_8_x86_64_8.1.1911
+    size: 10000 # in MB
+    cpu: 1
+    vcpu: 2
+    memory: 1024
+    arch: x86_64
+    network: bridge_0

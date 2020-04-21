@@ -1,0 +1,22 @@
+- name: Dropping rendered Instances templates in place
+  template:
+    src: instance.tpl.j2
+    dest: "/var/lib/one/templates/instances/{{ item.name | lower | replace(' ','_') }}.tpl"
+  with_items: "{{ opennebula_instances }}"
+  register: templates_list
+  loop_control:
+    label: '{{ item.name }}'
+  tags:
+    - templates
+
+- name: Creating instances templates if needed
+  shell: 'onetemplate create /var/lib/one/templates/instances/{{ item.item.name | lower | replace(" ","_") }}.tpl ; onetemplate chmod "{{ item.item.name }}" 644'
+  become_user: oneadmin
+  when: item.changed
+  loop: "{{ templates_list.results }}"
+  loop_control:
+    label: '{{ item.item.name }}'
+  tags:
+    - templates
+
+

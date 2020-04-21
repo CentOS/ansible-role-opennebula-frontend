@@ -123,3 +123,8 @@
   include_tasks: networks.yml
   tags:
     - networks
+
+- name: Managing instances templates and flavors
+  include_tasks: instance_templates.yml
+  tags:
+    - templates

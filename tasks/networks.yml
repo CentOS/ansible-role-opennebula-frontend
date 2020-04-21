@@ -10,7 +10,7 @@
     - networks
 
 - name: Registering network if needed
-  shell: "onevnet create /var/lib/one/templates/network/{{ item.item.name }}.tpl"
+  shell: 'onevnet create /var/lib/one/templates/networks/{{ item.item.name }}.tpl ; onevnet chmod "{{ item.item.name }}" 644'
   become_user: oneadmin
   when: item.changed
   loop: "{{ networks_list.results }}"
