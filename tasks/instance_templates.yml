@@ -2,6 +2,7 @@
   template:
     src: instance.tpl.j2
     dest: "/var/lib/one/templates/instances/{{ item.name | lower | replace(' ','_') }}.tpl"
+    mode: 0644
   with_items: "{{ opennebula_instances }}"
   register: templates_list
   loop_control:

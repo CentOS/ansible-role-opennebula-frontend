@@ -2,6 +2,7 @@
   template:
     src: network-bridge.j2
     dest: "/var/lib/one/templates/networks/{{ item.name }}.tpl"
+    mode: 0644
   with_items: "{{ opennebula_networks }}"
   register: networks_list
   loop_control:
