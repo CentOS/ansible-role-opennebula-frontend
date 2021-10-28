@@ -97,7 +97,7 @@
 - block:
   - name: Ensuring we have pip installed
     yum:
-      name: python2-pip
+      name: python-pip
       state: installed
 
   - name: Installing required pip pkgs and deps for delegated tasks
