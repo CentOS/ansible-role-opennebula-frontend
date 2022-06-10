@@ -37,9 +37,15 @@ NIC_DEFAULT=[
   MODEL="virtio" ]
 OS=[
   ARCH="{{ item.arch }}",
+{% if item.machine_type is defined %}
+  MACHINE="{{ item.machine_type }}",
+{% endif %}
   BOOT="" ]
 RAW=[
   DATA="<devices><serial type=\"pty\"><source path=\"/dev/pts/5\"/><target port=\"0\"/></serial><console type=\"pty\" tty=\"/dev/pts/5\"><source path=\"/dev/pts/5\"/><target port=\"0\"/></console></devices>",
   TYPE="kvm" ]
+{% if item.sched_requirements is defined %}
+SCHED_REQUIREMENTS="{{ item.sched_requirements }}""
+{% else %}
 SCHED_REQUIREMENTS="ARCH=\"{{ item.arch }}\""
-
+{% endif %}

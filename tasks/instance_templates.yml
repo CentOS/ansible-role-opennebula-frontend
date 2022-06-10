@@ -10,7 +10,7 @@
   tags:
     - templates
 
-- name: Creating instances templates if needed
+- name: Creating and updating instances templates if needed
   shell: 'onetemplate create /var/lib/one/templates/instances/{{ item.item.name | lower | replace(" ","_") }}.tpl ; onetemplate chmod "{{ item.item.name }}" 644'
   become_user: oneadmin
   when: item.changed

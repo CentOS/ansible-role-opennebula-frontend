@@ -51,6 +51,8 @@ opennebula_networks:
 
 # Which templates/flavors to create to be able to instantiate those easily
 # Memory/disk size are all in MB
+# It's also possible to specify machine_type (not mandatory but see below)
+# and also adding some other opennebula scheduler requirements (in case we need to redirect to specific hypervisors)
 opennebula_instances:
   - name: CentOS 8 x86_64 tiny
     image: CentOS_8_x86_64_8.1.1911
@@ -60,3 +62,14 @@ opennebula_instances:
     memory: 1024
     arch: x86_64
     network: bridge_0
+  - name: CentOS 8 ppc64le tiny
+    image: CentOS_8_ppc64le_8.1.1911
+    size: 10000 # in MB
+    cpu: 1
+    vcpu: 2
+    memory: 1024
+    arch: x86_64
+    network: bridge_0
+    machine_type: pseries-rhel7.6.0 # defining a specific libvirt machine type
+    scheds_requirements: (ARCH=\"ppc64le\") & (KVM_CPU_MODEL=\"POWER8\") # also adding more contraints for opennebula
+    
