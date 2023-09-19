@@ -1,0 +1,2 @@
+python_pip_pkg: python3-pip
+python_pip_exec: pip3

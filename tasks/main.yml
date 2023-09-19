@@ -1,4 +1,14 @@
 # Default task for role opennebula-frontend
+
+- name: Importing specific distro variables
+  ansible.builtin.include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
+    - "{{ ansible_distribution }}.yml"
+  tags:
+    - vars
+    - always
+
 - name: Required MySQL setup
   include_role:
     name: mysql
@@ -97,12 +107,15 @@
 - block:
   - name: Ensuring we have pip installed
     yum:
-      name: python-pip
+      name: "{{ python_pip_pkg }}"
       state: installed
 
   - name: Installing required pip pkgs and deps for delegated tasks
     pip:
       name: ['oca', 'pyone']
+      executable: "{{ python_pip_exec }}"
+    tags:
+      - pip
 
 - name: Ensuring we have directories to drop templates
   file:
